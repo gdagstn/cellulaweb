@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>cellula v. 0.0.900 - Assigning identities</title>
+<title>cellula v. 0.0.900 - Scoring the cell cycle</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -200,7 +200,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Assigning identities</h1>
+<h1 class="title">Scoring the cell cycle</h1>
 </div>
 
 
@@ -215,46 +215,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p><code>cellula</code> implements 5 methods for automated cell identity assignment, 4 of which are signature-based, and one reference-based. The methods are based on the Bioconductor <code>AUCell</code> <a href="">package</a><a href="references.html#12">[12]</a><a id="12"></a>, the <code>GSVA</code> <code>ssGSEA</code> implementation<a href="references.html#13">[13]</a><a id="13"></a>, the <code>Seurat</code> <code>AddModuleScore()</code> function, the <code>UCell</code> method<a href="references.html#14">[14]</a><a id="14"></a> and the <code>Jaitin</code> method<a href="references.html#15">[15]</a><a id="15"></a>.</p>
-<p>For the first 4 methods (<code>"AUCell"</code>, <code>"ssGSEA"</code>, <code>"AddModuleScore"</code> and <code>"UCell"</code>) the function requires user-defined <code>genesets</code>, i.e.&nbsp;a named list containing genes to be used for scoring every single cell. These can be obtained through other packages, e.g.&nbsp;<code>msigdbr</code>. For instance, if we wanted to take all the Muraro et al.<a href="references.html#16">[16]</a><a id="16"></a>. signature genes, present in the C8 collection, we would do:</p>
+<p><code>cellula</code> implements one method for cell cycle scoring, as done by the <code>tricycle</code> <a href="https://www.bioconductor.org/packages/release/bioc/html/tricycle.html">package</a> by Zheng and colleagues.</p>
+<p>The <code>assignCellCycle()</code> function is a simple wrapper to <code>tricycle</code> with a couple added features: two methods to determine the origin of the PCA point cloud automatically, and a simple way to infer the cell cycle phase (as a categorical vector) using the authors’ indications.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(msigdbr)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>type_genes <span class="ot">=</span> <span class="fu">msigdbr</span>(<span class="st">"Homo sapiens"</span>, <span class="at">category =</span> <span class="st">"C8"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>genesets <span class="ot">=</span> <span class="fu">lapply</span>(<span class="fu">split</span>(type_genes, type_genes<span class="sc">$</span>gs_name), <span class="cf">function</span>(x) x<span class="sc">$</span>gene_symbol)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>muraro_genes <span class="ot">=</span> genesets[<span class="fu">grep</span>(<span class="st">"MURARO"</span>, <span class="fu">names</span>(genesets))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">=</span> <span class="fu">assignCellCycle</span>(sce)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Then, we would use the <code>assignIdentities()</code> function from <code>cellula</code> to calculate signature scores:</p>
+<p>The methods for recentering (<code>recenter</code> argument) are:</p>
+<ul>
+<li><p><code>optim</code> an optimization routine that finds the point within the PCA point cloud that is farthest from all other points (by Pierre-Luc Germain)</p></li>
+<li><p><code>chull</code> finds the center by finding the centroid of the convex hull of the cloud</p></li>
+<li><p><code>none</code> takes (0,0) as center.</p></li>
+</ul>
+<p>Additional parameters feed directly into the <code>tricycle::estimate_cycle_position()</code> function, in particular:</p>
+<ul>
+<li><p><code>gname.type</code> the type of gene names (rownames of the <code>SCE</code> object), either <code>"SYMBOL"</code> or <code>"ENSEMBL"</code></p></li>
+<li><p><code>gname</code> the <code>rowData(sce)</code> column with gene identifiers, if not rownames</p></li>
+<li><p><code>expres_values</code> the assay to use to project data on the reference space.</p></li>
+</ul>
+<p>The <code>plotCellCycle()</code> function takes <code>tricycle</code> results and plots them in a circular embedding in which the position of each cell reflects the cell cycle phase it is estimated to be in.</p>
+<p>The <code>rings_by</code> argument controls how many rings the data will be divided into: it can be clusters, samples, batches, etc.</p>
+<p>The <code>colour_by</code> argument controls the data used for the color scale. By default it is the position (angle) on the projection, which, being cyclical, requires a cyclical color palette.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">=</span> <span class="fu">assignIdentities</span>(sce, </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">genesets =</span> muraro_genes, </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"AUC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's make shorter labels</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>labels_AUC <span class="ot">=</span> <span class="fu">gsub</span>(sce<span class="sc">$</span>labels_AUC, <span class="at">pattern =</span> <span class="st">"MURARO_PANCREAS_"</span>, <span class="at">replacement =</span> <span class="st">""</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>labels_AUC <span class="ot">=</span> <span class="fu">gsub</span>(sce<span class="sc">$</span>labels_AUC, <span class="at">pattern =</span> <span class="st">"_CELL"</span>, <span class="at">replacement =</span> <span class="st">""</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plotCycle</span>(sce, <span class="at">rings_by =</span> <span class="st">"labels_AUC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Other signature-based methods are <code>"Seurat"</code>, <code>"UCell"</code>, and <code>"ssGSEA"</code>.</p>
-<p>A reference-based method, <code>"Jaitin"</code>, is available. This method uses a matrix of gene expression as a reference, and then calculates the posterior probability for each cell in the <code>sce</code> object that its transcriptome matches any of the reference ones. The reference with the highest probability is selected as the best label. Importantly, for the “<code>Jaitin</code>” method it is possible to choose the <code>assay</code> to be used. If the user supplies a matrix of log-normalized counts as a reference, the <code>assay</code> argument should point to a similarly normalized data, e.g.&nbsp;<code>"logcounts"</code>.</p>
-<p><code>assignIdentities()</code> will create a column named “labels_AUC” (or anything else the user determines using the <code>name</code> argument) in the <code>colData(sce)</code>. Assignments can be plotted:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_UMAP</span>(sce, <span class="at">umap_slot =</span> <span class="st">"UMAP_Harmony"</span>, <span class="at">color_by =</span> <span class="st">"labels_AUC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><img src="https://user-images.githubusercontent.com/21171362/217058249-6bcc821a-22cb-4aa1-88d1-d21e33fc63e7.png" width="800"></p>
-<p>You can now see why it can be useful to plot a confusion matrix as a heatmap:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_Coldata</span>(sce, <span class="at">x =</span> <span class="st">"SNN_0.5"</span>, <span class="at">y =</span> <span class="st">"labels_AUC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><img src="https://user-images.githubusercontent.com/21171362/218304923-ef02142a-00dc-4065-a4d6-a0d509e88d3a.png" width="800"></p>
-<p>You can also use single signatures as an input, which will result in adding the score to the <code>colData</code> slot of the SCE directly, rather than an assignment:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">assignIdentities</span>(sce, </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">genesets =</span> muraro_genes<span class="sc">$</span>BETA_CELL, </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">method =</span> <span class="st">"AUC"</span>, </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">name =</span> <span class="st">"Beta_Cell_signature"</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_UMAP</span>(sce, <span class="at">umap_slot =</span> <span class="st">"UMAP_Harmony"</span>, <span class="at">color_by =</span> <span class="st">"Beta_Cell_signature"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><img src="https://user-images.githubusercontent.com/21171362/218026010-9bc1f806-e3c3-408d-ad49-0ca5cab1bd09.png" width="500"></p>
-<p>The <code>"UCell"</code> method works well when you have small signatures (e.g.&nbsp;even 2/3 genes). It allows you to specify positive and negative labels, which is useful when you are sure the identity of a cell types depends on the lack of expression of certain markers (see hematopoietic lineages). To do so, you can add “+” or “-” to each gene.</p>
+<p><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/21171362/255187279-6a0afc0d-124c-4255-a871-8d87340b9d12.png" width="800"></p>
 
 
 
