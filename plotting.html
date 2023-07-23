@@ -200,6 +200,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plot_umap" id="toc-plot_umap" class="nav-link active" data-scroll-target="#plot_umap"><code>plot_UMAP()</code></a></li>
   <li><a href="#plot_coldata" id="toc-plot_coldata" class="nav-link" data-scroll-target="#plot_coldata"><code>plot_Coldata()</code></a></li>
   <li><a href="#plot_dots" id="toc-plot_dots" class="nav-link" data-scroll-target="#plot_dots"><code>plot_dots()</code></a></li>
+  <li><a href="#color-palettes" id="toc-color-palettes" class="nav-link" data-scroll-target="#color-palettes">Color palettes</a>
+  <ul class="collapse">
+  <li><a href="#standard-qualitative" id="toc-standard-qualitative" class="nav-link" data-scroll-target="#standard-qualitative">Standard qualitative</a></li>
+  <li><a href="#cvd-adjusted-qualitative" id="toc-cvd-adjusted-qualitative" class="nav-link" data-scroll-target="#cvd-adjusted-qualitative">CVD-adjusted qualitative</a></li>
+  <li><a href="#other-qualitative-palettes" id="toc-other-qualitative-palettes" class="nav-link" data-scroll-target="#other-qualitative-palettes">Other qualitative palettes</a></li>
+  <li><a href="#quantitative-palettes" id="toc-quantitative-palettes" class="nav-link" data-scroll-target="#quantitative-palettes">Quantitative palettes</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -270,8 +277,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_dots</span>(sce, <span class="at">genes =</span> top5, <span class="at">group_by =</span> <span class="st">"SNN_0.5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="https://user-images.githubusercontent.com/21171362/216310875-a06081b7-e9bf-404a-99f3-ef1291555ad3.png" width="600"></p>
+</section>
+<section id="color-palettes" class="level2">
+<h2 class="anchored" data-anchor-id="color-palettes">Color palettes</h2>
+<p><code>cellula</code> has a few standard color palettes for data visualization, which were lifted from different packages. All plotting functions allow the user to input their custom palettes.</p>
+<section id="standard-qualitative" class="level3">
+<h3 class="anchored" data-anchor-id="standard-qualitative">Standard qualitative</h3>
+<p>The standard qualitative palette comes from iterations of the <code>qualpalr</code> package in the default implementation of <code>qualpal()</code>. These palettes are optimized for maximal color differences in a perceptual space, i.e.&nbsp;by finding the N farthest points in the DIN99 color space. Since the number of colors will change the coordinates, using 2, 3, 4, … N colors will create different palettes.</p>
+<p>This is automatically selected by default.</p>
+<p><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/21171362/255325128-68f9ece4-e0e5-4e8f-a47b-b1fbbf97f91c.png" width="500"></p>
+</section>
+<section id="cvd-adjusted-qualitative" class="level3">
+<h3 class="anchored" data-anchor-id="cvd-adjusted-qualitative">CVD-adjusted qualitative</h3>
+<p>There are two qualitative palettes from <code>qualpalr</code> adjusted for Color Vision Deficiency (CVD) using a severity of 0.5. One is adjusted for <em>protanopia</em> and one for <em>tritanopia</em>.</p>
+<p><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/21171362/255325364-9bee13d2-af87-4ce3-91c0-21ec96daecee.png" width="500"></p>
+</section>
+<section id="other-qualitative-palettes" class="level3">
+<h3 class="anchored" data-anchor-id="other-qualitative-palettes">Other qualitative palettes</h3>
+<p><code>cellula</code> offers a few alternative qualitative palettes out of the box, with different sizes.</p>
+<ul>
+<li><code>Tableau</code>: the Tableau palette contains 10 colors. This palette is not optimized for CVD and is not maximally separated, just pleasant to look at. The Tableau palette comes from base R.</li>
+</ul>
+<!-- -->
+<ul>
+<li><p><code>Pear</code>: the Pear18 palette contains 18 colors. This palette is not optimized for CVD and is not maximally separated, just pleasant to look at. The Pear18 palette comes from a subset of the original Pear36 palette on <a href="https://lospec.com/palette-list/pear36">Lospec</a> by user PineappleOnPizza.</p></li>
+<li><p><code>Polychrome</code>: the Polychrome24 palette contains 24 colors. This palette is not optimized for CVD and is not maximally separated, just pleasant to look at. The Polychrome24 palette comes from a subset of the Polychrome36 palette from base R.</p></li>
+<li><p><code>Polylight</code>: the Polychrome24 palette containst 24 colors. This palette is not optimized for CVD and is not maximally separated, just pleasant to look at. This is the Polychrome24 palette lightened by a factor of 0.4 using <code>colorspace::lighten()</code>.</p></li>
+</ul>
+<p><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/21171362/255385114-16ed9a67-34fe-4252-9b84-e46f4b3c3103.png" width="500"></p>
+</section>
+<section id="quantitative-palettes" class="level3">
+<h3 class="anchored" data-anchor-id="quantitative-palettes">Quantitative palettes</h3>
+<p>The <code>Sunset</code>, <code>Heat 2</code> and truncated <code>Yellow-Green-Blue</code> quantitative palette comes from the <code>colorspace</code> package, through the <code>sequential_hcl()</code> function using 25 colors (<code>Sunset</code> and <code>Heat 2</code>), 40 colors truncated to the last 30 (<code>YlGnBu</code>).</p>
+<p>The <code>Parula</code> and <code>Turbo</code> quantitative palettes come from the <code>pals</code> package, using the <code>parula()</code> and <code>turbo()</code> functions respectively, both using 25 colors.</p>
+<p><code>Sunset</code> is the standard palette for quantitative data in dimensionality reductions. <code>YlGnBu</code> is the standard palette for quantitative data in dot plots and heatmaps. <code>Heat 2</code> is the palette for kernel densities on scatterplots. <code>Parula</code> and <code>Turbo</code> are there just for testing purposes but can be chosen using <code>color_palette = "Parula"</code> or <code>color_palette = "Turbo"</code> where possible.</p>
+<p><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/21171362/255325599-5b493ea8-f6ba-4844-818b-84eba93338d6.png" width="500"></p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
