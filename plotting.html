@@ -284,12 +284,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="standard-qualitative" class="level3">
 <h3 class="anchored" data-anchor-id="standard-qualitative">Standard qualitative</h3>
 <p>The standard qualitative palette comes from iterations of the <code>qualpalr</code> package in the default implementation of <code>qualpal()</code>. These palettes are optimized for maximal color differences in a perceptual space, i.e.&nbsp;by finding the N farthest points in the DIN99 color space. Since the number of colors will change the coordinates, using 2, 3, 4, … N colors will create different palettes.</p>
-<p>This is automatically selected by default.</p>
+<p>This is automatically selected by default when the data is categorical, e.g.&nbsp;for clusters, samples, etc. It can be selected manually by specifying <code>color_palette = "Qualpal"</code> where possible.</p>
 <p><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/21171362/255325128-68f9ece4-e0e5-4e8f-a47b-b1fbbf97f91c.png" width="500"></p>
 </section>
 <section id="cvd-adjusted-qualitative" class="level3">
 <h3 class="anchored" data-anchor-id="cvd-adjusted-qualitative">CVD-adjusted qualitative</h3>
-<p>There are two qualitative palettes from <code>qualpalr</code> adjusted for Color Vision Deficiency (CVD) using a severity of 0.5. One is adjusted for <em>protanopia</em> and one for <em>tritanopia</em>.</p>
+<p>There are two qualitative palettes from <code>qualpalr</code> adjusted for Color Vision Deficiency (CVD) using a severity of 0.5. One is adjusted for <em>protanopia</em> and one for <em>tritanopia</em>.<br>
+<br>
+They can be selected by specifying <code>color_palette = "Protan"</code> or <code>color_palette = "Tritan"</code> where possible.</p>
 <p><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/21171362/255325364-9bee13d2-af87-4ce3-91c0-21ec96daecee.png" width="500"></p>
 </section>
 <section id="other-qualitative-palettes" class="level3">
@@ -308,9 +310,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="quantitative-palettes" class="level3">
 <h3 class="anchored" data-anchor-id="quantitative-palettes">Quantitative palettes</h3>
-<p>The <code>Sunset</code>, <code>Heat 2</code> and truncated <code>Yellow-Green-Blue</code> quantitative palette comes from the <code>colorspace</code> package, through the <code>sequential_hcl()</code> function using 25 colors (<code>Sunset</code> and <code>Heat 2</code>), 40 colors truncated to the last 30 (<code>YlGnBu</code>).</p>
+<p>The <code>Sunset</code>, <code>Heat</code> and truncated Yellow-Green-Blue (<code>YlGnBu</code>) quantitative palette comes from the <code>colorspace</code> package, through the <code>sequential_hcl()</code> function using 25 colors (<code>Sunset</code> and <code>Heat</code>), 40 colors truncated to the last 30 (<code>YlGnBu</code>).</p>
 <p>The <code>Parula</code> and <code>Turbo</code> quantitative palettes come from the <code>pals</code> package, using the <code>parula()</code> and <code>turbo()</code> functions respectively, both using 25 colors.</p>
-<p><code>Sunset</code> is the standard palette for quantitative data in dimensionality reductions. <code>YlGnBu</code> is the standard palette for quantitative data in dot plots and heatmaps. <code>Heat 2</code> is the palette for kernel densities on scatterplots. <code>Parula</code> and <code>Turbo</code> are there just for testing purposes but can be chosen using <code>color_palette = "Parula"</code> or <code>color_palette = "Turbo"</code> where possible.</p>
+<p><code>Sunset</code> is the default palette for quantitative data in dimensionality reductions. <code>YlGnBu</code> is the default palette for quantitative data in dot plots and heatmaps. <code>Heat 2</code> is the palette for kernel densities on scatterplots. <code>Parula</code> and <code>Turbo</code> are there just for testing purposes but can be chosen using <code>color_palette = "Parula"</code> or <code>color_palette = "Turbo"</code> where possible.</p>
 <p><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/21171362/255325599-5b493ea8-f6ba-4844-818b-84eba93338d6.png" width="500"></p>
 
 
