@@ -221,7 +221,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>At the time of writing <code>cellula</code> only implements a wrapper around the <code>slingshot</code> method<a href="references.html#18">[18]</a><a id="18"></a> and the <code>monocle3</code> method <a href="references.html#19">[19]</a><a id="19"></a> for pseudotemporal trajectory inference, and the <code>testPseudotime()</code> method from <code>TSCAN</code><a href="references.html#20">[20]</a><a id="20"></a> for differential expression along a trajectory. More trajectory inference and differential expression methods will be implemented in the future.</p>
+<p>At the time of writing <code>cellula</code> only implements a wrapper around the <code>slingshot</code> method<a href="references.html#20">[20]</a><a id="20"></a> and the <code>monocle3</code> method <a href="references.html#21">[21]</a><a id="21"></a> for pseudotemporal trajectory inference, and the <code>testPseudotime()</code> method from <code>TSCAN</code><a href="references.html#22">[22]</a><a id="22"></a> for differential expression along a trajectory. More trajectory inference and differential expression methods will be implemented in the future.</p>
 <p>The <code>monocle3</code> method has been originally developed to work on 2D embeddings such as UMAP, but given the distortion introduced by these embeddings this function allows users to input any embedding (such as PCA). Moreover, the <code>monocle3</code> method originally allows partitions to be specified. In the current implementation partitions have been disabled.</p>
 <p>The <code>findTrajectories()</code> function takes a <code>SingleCellExperiment</code> object as input, and requires the user to specify the method (one of <code>"slingshot"</code> or <code>"monocle"</code>), the cluster label which will be used as an input to the MST creation in <code>slingshot</code>, or to identify the starting node in <code>monocle3</code>.</p>
 <p>Other important parameters are:</p>
@@ -255,7 +255,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>Monocle_principal_graph_aux</code>: the rest of the <code>CellDataSet</code> object with additional information on the principal graph.</li>
 </ul></li>
 </ul>
-<p>In this example we download a dataset that captures early haematopoietic differentiation from Nestorowa et al.&nbsp;<a href="#21">[21]</a><a id="21"></a> and we do a quick processing and clustering.</p>
+<p>In this example we download a dataset that captures early haematopoietic differentiation from Nestorowa et al.&nbsp;<a href="#23">[23]</a><a id="23"></a> and we do a quick processing and clustering.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>sce2 <span class="ot">=</span> scRNAseq<span class="sc">::</span><span class="fu">NestorowaHSCData</span>()</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -287,7 +287,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/21171362/242682268-8855a6ca-c106-4f23-b2e6-c54fdcedac64.png" width="400"></p>
 <p><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/21171362/242682289-8b43ed43-ab82-4d03-901a-d7109d3a3d52.png" width="400"></p>
-<p>Since the 2D embedding of <code>monocle3</code> PCA-derived trajectories may be hard to understand, given the distortions introduced by UMAP, <code>cellula</code> includes an additional 2D embedding method, <code>dr_embed = "FR"</code>, inspired båy the PAGA embedding initialization technique <a href="references.html#22">[22]</a><a id="22"></a>.</p>
+<p>Since the 2D embedding of <code>monocle3</code> PCA-derived trajectories may be hard to understand, given the distortions introduced by UMAP, <code>cellula</code> includes an additional 2D embedding method, <code>dr_embed = "FR"</code>, inspired båy the PAGA embedding initialization technique <a href="references.html#24">[24]</a><a id="24"></a>.</p>
 <p>Briefly, once the principal graph has been calculated, it is laid out in 2D using the Fruchterman-Reingold algorithm. Then each cell is randomly plotted around their closest vertex in the graph, and reordered according to pseudotime value. This semi-random layout is used as an initialization for UMAP, which will optimize the point positions. The resulting layout is more visually pleasing and reflects more accurately the positions of cells with respect to the trajectory (although not necessarily to each other).</p>
 <p>This FR-initialized UMAP is stored in a <code>reducedDim</code> slot named <code>UMAP_FR</code>.</p>
 <div class="cell">

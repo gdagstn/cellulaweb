@@ -269,9 +269,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     |    |    ├── Harmony matrix (on PCA)
     |    |    └── UMAP
     |    └── Regression [INT/regression]
-    |         ├── regression on logcounts
+    |    |    ├── regression on logcounts
+    |    |    ├── PCA
+    |    |    └── UMAP
+    |    ├── scMerge2 [INT/scMerge2]
+    |    |    ├── Pseudobulk and RUV
+    |    |    └── UMAP
+    |    └── STACAS [INT/STACAS]
+    |         ├── conversion to Seurat
+    |         ├── normalization and HVG finding
+    |         ├── STACAS integration
     |         ├── PCA
-    |         └── UMAP
+    |         └── UMAP    
     └── Cell type annotation [ANNO] (optional) - choose one method
               ├── Seurat AddModuleScore
               ├── ssGSEA
@@ -299,7 +308,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                    ├── populate FR layout (if dr_embed = "FR")
                    └── UMAP on FR layout (if dr_embed = "FR")
              </code></pre>
-<p>Most of the choices can be made around the integration method. <code>cellula</code> has implemented 5 methods: <code>fastMNN</code><a href="references.html#3">[3]</a><a id="3"></a>,<a href="references.html#4">[4]</a><a id="4"></a> and <code>regressBatches</code> from the <code>batchelor</code> package, <code>Harmony</code><a href="references.html#5">[5]</a><a id="5"></a>, the CCA-based <code>Seurat</code><a href="references.html#6">[6]</a><a id="6"></a> method, and non-negative matrix factorization (NMF) from <code>LIGER</code><a href="#7">[7]</a><a id="7"></a> through the <code>rliger</code> package.</p>
+<p>Most of the choices can be made around the integration method. <code>cellula</code> has implemented 5 methods: <code>fastMNN</code><a href="references.html#3">[3]</a><a id="3"></a>,<a href="references.html#4">[4]</a><a id="4"></a> and <code>regressBatches</code> from the <code>batchelor</code> package, <code>Harmony</code><a href="references.html#5">[5]</a><a id="5"></a>, the CCA-based <code>Seurat</code><a href="references.html#6">[6]</a><a id="6"></a> method, non-negative matrix factorization (NMF) from <code>LIGER</code><a href="references.html#7">[7]</a><a id="7"></a> through the <code>rliger</code> and <code>RccPlancs</code> packages, a pseudobulk and RUV-based method, <code>scMerge2</code> from the <code>scMerge</code> package<a href="references.html#8">[8]</a><a id="8"></a>, and the <code>Seurat</code>-based <code>STACAS</code> integration method from the eponymous package<a href="references.html#9">[9]</a><a id="9"></a>.</p>
 <p><code>LIGER</code> and <code>Seurat</code> integration methods require an intermediate step where package-specific objects are created and some pre-processing steps are repeated again according to the best practices published by the authors of those packages.</p>
 <p>Each step of the pipeline can be called independently on the object:</p>
 <div class="cell">
@@ -307,7 +316,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">doNormAndReduce</span>(sce, <span class="at">name =</span> <span class="st">"segerstolpe"</span>, <span class="at">batch =</span> <span class="st">"individual"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">integrateSCE</span>(sce, <span class="at">batch =</span> <span class="st">"individual"</span>, <span class="at">method =</span> <span class="st">"Seurat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Doublet identification is carried out through the <code>scDblFinder</code> package<a href="#8">[8]</a><a id="8"></a> using standard defaults.</p>
+<p>Doublet identification is carried out through the <code>scDblFinder</code> package<a href="references.html#10">[10]</a><a id="10"></a> using standard defaults.</p>
 
 
 

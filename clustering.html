@@ -222,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p><code>cellula</code> offers a wrapper around clustering functions. For now, only SNN-based Louvain<a href="references.html#9">[9]</a><a id="9"></a> and Leiden<a href="references.html#10">[10]</a><a id="10"></a> clustering are implemented. The <code>makeGraphsAndClusters()</code> function allows users to do parameter sweeps along either the number of neighbors or the resolution of the clustering.</p>
+<p><code>cellula</code> offers a wrapper around clustering functions. For now, only SNN-based Louvain<a href="references.html#11">[11]</a><a id="11"></a> and Leiden<a href="references.html#12">[12]</a><a id="12"></a> clustering are implemented. The <code>makeGraphsAndClusters()</code> function allows users to do parameter sweeps along either the number of neighbors or the resolution of the clustering.</p>
 <p>In this example we sweep along the value of the <code>resolution</code> parameter for a Louvain clustering. For the SNN graph constructions, edges are weighted according to the jaccard index of their shared neighbors, mimicking the <code>Seurat</code> graph construction and clustering procedure:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">makeGraphsAndClusters</span>(sce, <span class="at">k =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="dv">1</span>),</span>
@@ -247,7 +247,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_UMAP</span>(sce, <span class="at">umap_slot =</span> <span class="st">"UMAP_Harmony"</span>, <span class="at">color_by =</span> <span class="st">"SNN_0.5"</span>, <span class="at">label_by =</span> <span class="st">"SNN_0.5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="https://user-images.githubusercontent.com/21171362/216006173-db0a4ebf-702e-4bac-a25c-e789ee675e03.png" width="400"></p>
-<p>If using the <code>clustree</code> <a href="">package</a><a href="references.html#11">[11]</a><a id="11"></a>, the clustering tree can be visualized by using the same prefix defined in <code>makeGraphsAndClusters()</code>:</p>
+<p>If using the <code>clustree</code> <a href="">package</a><a href="references.html#13">[13]</a><a id="13"></a>, the clustering tree can be visualized by using the same prefix defined in <code>makeGraphsAndClusters()</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clustree)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">clustree</span>(sce, <span class="at">prefix =</span> <span class="st">"SNN_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
